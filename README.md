@@ -1,9 +1,7 @@
-# Rack-Root - the home lab inventory project
-This is my first modern web app (ever) and its purpose is to help me learn to write a web app from scratch! This will be for tracking the inventory of a home lab.
+# Rack-Root - The Home Lab Inventory Project
+This is my first modern web app (ever) and I'm using it to help me learn how to put this kind of project together. This will be for tracking the inventory in my home lab with a persistent back end database. I'm writing this primarily for my own usage and portfolio.
 
-This web app is a chance for me to write some modern web app code and also demonstrate how I pick up new technologies. I'm writing this mostly for myself and my own portfolio.
-
-I'm keeping the scope small for now, at least to make this manageable.
+I'm keeping the scope small for now, at least to make this manageable. We'll see where this ends up going.
 
 # Front end
 Web - nginx
