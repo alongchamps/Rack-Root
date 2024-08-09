@@ -1,0 +1,18 @@
+services:
+  frontend:
+    container_name: frontend
+    image: frontend:latest
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile-front.yaml
+    ports:
+    - "8080:80"
+    restart: always
+
+  backend:
+    container_name: backend
+    image: backend:latest
+    build:
+      context: ./backend
+      dockerfile: Dockerfile-back.yaml
+    restart: always

@@ -11,7 +11,7 @@ Formatting - help from Bootstrap
 # Back end
 Python - I'm going with Flask for this project
 
-Database - to be detemrined, probably something schemaless
+Database - to be determined
 
 # Features
 * Track the inventory and relationships of hardware/VMs in your home lab. Everything from racks to servers to NAS devices to the hard drives inside are intended to be in scope. Of course, that's not a complete list of object types.
