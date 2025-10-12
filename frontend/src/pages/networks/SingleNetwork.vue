@@ -19,6 +19,7 @@
           { title: 'Description', value: 'description' },
           { title: 'First IP', value: 'startIp' },
           { title: 'Last IP', value: 'endIp' },
+          { title: 'Actions', value: 'actions' },
         ],
         newDhcpRangeDialog: false,
         invalidDhcpRangeInput: false,
@@ -27,7 +28,10 @@
           description: '',
           startIp: '',
           endIp: ''
-        }
+        },
+        percentageSubnetMask: 0.0,
+        percentageAvailable: 0.0,
+        percentageDhcp: 0.0,
       }
     },
     methods: {
@@ -44,6 +48,10 @@
         this.totalIps = networkResult.ipRecord.length
         this.availableIps = networkResult.ipRecord.filter((ip) => ip.status == "Available").length
         this.dhcpIps = networkResult.ipRecord.filter((ip) => ip.status == "DHCP").length
+
+        this.percentageSubnetMask = networkResult.subnetMaskBits / 32 * 100;
+        this.percentageAvailable = this.availableIps / this.totalIps * 100;
+        this.percentageDhcp = this.dhcpIps / this.totalIps * 100;
 
         // This may return a 404, which is expected when no gateway is set on the network
         const resGateway = await fetch("http://localhost:8000/networks/" + id + "/gateway/")
@@ -123,11 +131,20 @@
         } else {          
           // refresh the data on this page
           this.getSingleNetwork(this.network.id)
+          this.getDhcpRanges(this.$route.params.id)
 
           // hide device dialog and error message, if visible
           this.newDhcpRangeDialog = false
           this.invalidDhcpRangeInput = false
         }
+      },
+      async deleteDhcpRange(dhcpRangeIdToDelete) {
+        const res = await fetch("http://localhost:8000/networks/" + this.network.id + "/dhcp/" + dhcpRangeIdToDelete, {
+          method: 'DELETE'
+        })
+
+        this.getSingleNetwork(this.network.id)
+        this.getDhcpRanges(this.$route.params.id)
       }
     },
     mounted() {
@@ -135,7 +152,6 @@
       this.getDhcpRanges(this.$route.params.id)
     }
   }
-
 </script>
 
 <template>
@@ -220,7 +236,16 @@
         <v-alert v-if="invalidDhcpRangeInput" class="ma-2" color="red" icon="mdi-alert-circle-outline" type="error">Invalid input for DHCP, range not created.</v-alert>
 
         <v-sheet class="pa-5 text-h5">
-          <v-data-table :items="dhcpRanges" :headers="dhcpRangeHeaders" item-key="id">
+          <v-data-table :items="dhcpRanges" :headers="dhcpRangeHeaders" :hide-default-footer="dhcpRanges.length < 11" item-key="id">
+            <template v-slot:top>
+              DHCP Ranges
+            </template>
+            <template v-slot:item.actions="{ item }">
+              <div class="d-flex ga-2 justify-left">
+                <v-icon color="medium-emphasis" icon="mdi-delete" size="medium" @click="deleteDhcpRange(item.id)"></v-icon>
+              </div>
+            </template>
+
           </v-data-table>
         </v-sheet>
       </v-col>
@@ -246,7 +271,6 @@
       </v-dialog>
     
     <!-- This v-dialog is for making new DHCP ranges which will ask for a name, optional description, start IP and end IP -->
-
       <v-dialog v-model="newDhcpRangeDialog" max-width="750">
         <v-form @submit.prevent="createDhcpRange()" id="newDhcpRangeForm">
           <v-card title="Make a new DHCP range">

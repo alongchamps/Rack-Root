@@ -52,7 +52,7 @@
 <template>
     <navigation />
     <v-btn class="ma-6" prepend-icon="mdi-plus" color="green" :to="{ name: 'NewItem' }">New Item</v-btn>
-    <v-data-table :items="items" :headers="headers" item-key="id" @click:row=goToItem>
+    <v-data-table :items="items" :headers="headers" item-key="id" :hide-default-footer="items.length < 11" @click:row=goToItem>
       <template #item.purchaseDate="{ item }">
         {{ date.format(item.purchaseDate, 'fullDate') }}
       </template>

@@ -33,6 +33,6 @@
 <template>
     <navigation />
     <v-btn class="ma-6" prepend-icon="mdi-plus" color="green" :to="{ name: 'NewNetwork' }">New Network</v-btn>
-    <v-data-table :items="networks" :headers="headers" item-key="id" @click:row=goToNetwork>
+    <v-data-table :items="networks" :headers="headers" item-key="id" :hide-default-footer="networks.length < 11" @click:row=goToNetwork>
     </v-data-table>
 </template>

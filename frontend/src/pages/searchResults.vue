@@ -39,7 +39,7 @@
         this.getNetworkSearchResults()
 
         // dhcp range search API call
-        // this.getDhcpRangeSearchResults()
+        this.getDhcpRangeSearchResults()
 
       },
       async getItemSearchResults() {
@@ -63,10 +63,6 @@
         const dhcpSearchMatchingQuery = await resDhcpRange.json();
         this.dhcpRangeSearchResults = dhcpSearchMatchingQuery
       }
-      // , dont think this function getDeviceTypeName is needed...
-      // async getDeviceTypeName(id) {
-      //   const res = await fetch("http://localhost:8000/deviceTypes/" + id );
-      // }
     },
     mounted() {
       this.getSearchResults(this.$route.query.q)
@@ -81,23 +77,28 @@
     <h1>Search results</h1>
     <br />
     You searched for: <b>{{ this.searchResults }}</b>
+    <br />
     
     <template v-if="itemSearchResults.length != 0">
-      <v-data-table :items="itemSearchResults" :headers="itemSearchResultsHeaders" item-key="id" @click:row=goToItem>
+      <h3>Items</h3>
+      <v-data-table :items="itemSearchResults" :headers="itemSearchResultsHeaders" :hide-default-footer="itemSearchResults.length < 11"  item-key="id" @click:row=goToItem>
       </v-data-table>
       <br />
     </template>
 
     <template v-if="networkSearchResults.length != 0">
-      <v-data-table :items="networkSearchResults" :headers="networkSearchResultsHeaders" item-key="id" @click:row=goToNetwork>
+      <h3>Networks</h3>
+      <v-data-table :items="networkSearchResults" :headers="networkSearchResultsHeaders" :hide-default-footer="networkSearchResults.length < 11" item-key="id" @click:row=goToNetwork>
       </v-data-table>
       <br />
     </template>
 
-    <!-- The next line is commented out until I have an actual DHCP details page -->
-    <!-- <v-data-table :items="dhcpRangeSearchResults" :headers="dhcpRangeSearchResultsHeaders" item-key="id" @click:row=goToDhcpDetailsPage> -->
-    <!-- <v-data-table :items="dhcpRangeSearchResults" :headers="dhcpRangeSearchResultsHeaders" item-key="id">      
-    </v-data-table> -->
+    <template v-if="dhcpRangeSearchResults.length != 0">
+      <h3>DHCP Ranges</h3>
+      <v-data-table :items="dhcpRangeSearchResults" :headers="dhcpRangeSearchResultsHeaders" :hide-default-footer="dhcpRangeSearchResults.length < 11" item-key="id">
+      </v-data-table>
+      <br />
+    </template>
 
   </v-container>
 

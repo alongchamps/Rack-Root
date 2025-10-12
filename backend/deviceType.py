@@ -1,3 +1,4 @@
+from devtools import pprint
 from fastapi import Depends, HTTPException
 from sqlalchemy import asc
 from sqlalchemy.orm import Session
@@ -65,13 +66,15 @@ def updateDeviceType(devId: int, devUpdate: DeviceTypeUpdate, db: Session = Depe
 
 # Delete a given device ID from the database
 def deleteDeviceType(devId: int, db: Session = Depends(getDb)):
-    results = db.query(DeviceType).where(DeviceType.id == devId)
+    
+    results = db.query(DeviceType).filter(DeviceType.id == devId)
 
     try:
         typeToDelete = results.one()
         db.delete(typeToDelete)
         db.commit()
-    except: 
-        raise HTTPException(status_code=404, detail="A device with that ID was not found")
+    except:
+
+        raise HTTPException(status_code=400, detail="An issue happened")
 
     return 0
